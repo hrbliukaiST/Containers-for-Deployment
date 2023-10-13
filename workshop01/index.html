@@ -1,0 +1,32 @@
+<!-- index.html -->
+<!--input id="input" type="text" /-->
+<button onclick="send()">Refresh</button>
+<img src="https://www.clker.com/cliparts/Z/E/M/K/j/Q/car-park-sign.svg" alt="carpark" width="50" height="60">
+<pre id="output"></pre>
+
+<!--a href="https://www.w3schools.com/">Visit W3Schools.com!</a-->
+<script>
+    //var input = document.getElementById("input");
+    var input = "input";
+    var output = document.getElementById("output");
+    var socket = new WebSocket("ws://localhost:8888/echo");
+    
+
+    // socket.onopen = function () {
+    //     output.innerHTML += "Status: Connected\n";
+    // };
+
+    output.innerHTML = "\n";
+    
+
+    socket.onmessage = function (e) {
+        output.innerHTML += " " + e.data + "\n";
+    };
+
+    function send() {
+        output.value = "";
+        output.innerHTML = "\n";
+        socket.send(input.value);
+        input.value = "";
+    }
+</script>
