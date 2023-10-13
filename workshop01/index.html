@@ -16,7 +16,7 @@
     //     output.innerHTML += "Status: Connected\n";
     // };
 
-    output.innerHTML = "\n";
+    //output.innerHTML = "Logic will get you from A to B. Imagination will take you everywhere.\n";
     
 
     socket.onmessage = function (e) {
@@ -25,7 +25,7 @@
 
     function send() {
         output.value = "";
-        output.innerHTML = "\n";
+        output.innerHTML = "";
         socket.send(input.value);
         input.value = "";
     }
