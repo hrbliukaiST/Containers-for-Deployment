@@ -1,0 +1,1 @@
+docker run -d -p 9090:3000 --network mynet -e DB_HOST=mydb -e DB_USER=root -e DB_PASSWORD=changeit --name myapp0 stackupiss/northwind-app:v1
