@@ -55,7 +55,7 @@ func parseCommandLine() CliOpt {
 
 	p := os.Getenv(ENV_PORT)
 	if "" == p {
-		port = 3000
+		port = 3001
 	} else {
 		var err error
 		port, err = strconv.Atoi(p)
