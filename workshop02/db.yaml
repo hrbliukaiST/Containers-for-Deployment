@@ -1,0 +1,58 @@
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ws2-db
+  namespace: ws2
+  labels:
+    app: ws2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ws2
+  template:
+    metadata:
+      name: ws2db-po
+      labels:
+        app: ws2
+    spec:
+      containers:
+      - name: ws2-container
+        image: stackupiss/bgg-database:v1
+        imagePullPolicy: IfNotPresent
+        
+        env:
+        #- name: INSTANCE_NAME
+          #value: "Test"
+        - name: INSTANCE_HASH
+          valueFrom: 
+           fieldRef:
+            fieldPath: status.podIP
+        envFrom:
+        - secretRef:        
+            name: ws2-secret
+        ports:
+        - containerPort: 3306
+           
+      
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mydb-svc
+  namespace: ws2
+  labels:
+    app: ws2     
+spec:    
+  type: ClusterIP
+  selector:
+    app: ws2
+  ports:
+  - port: 3306
+    targetPort: 3306
+    
+    
