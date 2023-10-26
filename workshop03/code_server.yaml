@@ -25,12 +25,14 @@ spec:
         envFrom:
           - configMapRef:
               name: ws3cm
+          - secretRef:
+              name: ws3-secret             
         ports:
         - containerPort: 8443
         volumeMounts:
         - name: workspace
           mountPath: "/config/workspace"
-          readOnly: true
+          #readOnly: true
       volumes:
       - name: workspace
         persistentVolumeClaim:

@@ -6,7 +6,7 @@ metadata:
   namespace: ws3
 data:
   TZ: "Asia/Singapore"    
-  PASSWORD: "password"
-  SUDO_PASSWORD: "password"    
+  #PASSWORD: "password"
+  #SUDO_PASSWORD: "password"    
   DEFAULT_WORKSPACE: "/config/workspace"
   
