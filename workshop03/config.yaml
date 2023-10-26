@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ws3cm
+  namespace: ws3
+data:
+  TZ: "Asia/Singapore"    
+  PASSWORD: "password"
+  SUDO_PASSWORD: "password"    
+  DEFAULT_WORKSPACE: "/config/workspace"
+  
