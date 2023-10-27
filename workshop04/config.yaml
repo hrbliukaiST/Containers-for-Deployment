@@ -1,0 +1,9 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ws4cm
+  namespace: ws4
+data:
+  MINIO_ROOT_USER: "root"    
+  

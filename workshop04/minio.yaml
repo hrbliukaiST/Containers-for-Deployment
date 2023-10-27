@@ -1,0 +1,127 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minio
+  namespace: ws4
+  labels:
+    app: ws4
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: ws4
+  serviceName: data-svc
+  template:
+    metadata:
+      name: minio-po
+      labels:
+        app: ws4
+    spec:
+      containers:
+      - name: ws4-container
+        image: bitnami/minio:latest
+        imagePullPolicy: IfNotPresent
+ 
+        command:
+        - minio 
+        - server 
+        - --address=:9000
+        - --console-address=:9090 
+        - http://minio-{0...3}.minio-svc..ws4.svc.cluster.local/data
+        envFrom:
+          - configMapRef:
+              name: ws4cm
+          - secretRef:
+              name: ws4-secret             
+        ports:
+        - name: minio-data
+          containerPort: 9000
+        - name: minio-console
+          containerPort: 9090
+        volumeMounts:
+        - name: data
+          mountPath: "/data"
+        resources:
+            requests:
+              cpu: 200m
+              memory: 250Mi
+            limits:
+              memory: 250Mi
+        readinessProbe:
+          httpGet:
+            path: /minio/health/ready
+            port: 9000
+        livenessProbe:
+          httpGet:
+            path: /minio/health/live
+            port: 9000
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 5
+      initContainers:
+      - name: init-miniio
+        image: busybox:1.28
+        volumeMounts:
+        - name: data
+          mountPath: "/data"
+        command: ['sh', '-c', 'chmod 777 /data']
+
+          #readOnly: true       
+
+
+
+
+#     volumes:
+#     - name: workspace
+#       persistentVolumeClaim:
+#         claimName: data-pvc            
+  volumeClaimTemplates:                     
+  - metadata:
+      name: data
+    spec:
+      storageClassName: do-block-storage 
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 100Mi      
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-svc
+  namespace: ws4
+  labels:
+    app: ws4     
+spec:    
+  #type: NodePort
+  #type: LoadBalancer
+  clusterIP: None
+  selector:
+    app: ws4
+  ports:
+  - port: 9000
+    targetPort: 9000
+    
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: console-svc
+  namespace: ws4
+  labels:
+    app: ws4     
+spec:    
+  #type: NodePort
+  #type: LoadBalancer
+  type: ClusterIP
+  selector:
+    app: ws4
+  ports:
+  - port: 9090
+    targetPort: 9090
+    
+
+      
